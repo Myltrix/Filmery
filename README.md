@@ -27,15 +27,9 @@
   </tr>
 </table>
 
----
-
 # 🎬 About the Project
 Filmery is a movie watchlist web application that helps users organize and manage movies they want to watch.  
 The project was created as a learning project to practice modern web development, including frontend frameworks and backend integration.
-
-Users can create an account, add movies to their personal watchlist, rate films, and keep track of what they have already watched.
-
----
 
 # 🧩 Pages
 - **Home** – Landing page with introduction and main features  
@@ -45,8 +39,6 @@ Users can create an account, add movies to their personal watchlist, rate films,
 - **Profile** – User profile with saved movies and ratings  
 - **Login / Register** – Authentication pages for user accounts  
 
----
-
 # ⭐ Features
 - Add movies to a personal watchlist  
 - Mark movies as watched  
@@ -55,20 +47,9 @@ Users can create an account, add movies to their personal watchlist, rate films,
 - Clean and responsive interface  
 - User authentication system  
 
----
-
 # ⚙️ Technologies
 - **React** – frontend interface  
 - **JavaScript (ES6+)** – application logic  
 - **CSS** – styling and responsive layout  
 - **MongoDB** – database for storing user data and movies  
 - **Node.js / Express** – backend API  
-
----
-
-# 🚀 Future Improvements
-- Movie recommendations  
-- Comments and reviews  
-- Social features (share watchlists)  
-- Advanced filtering and sorting  
-- Dark mode
