@@ -11,8 +11,8 @@ const Movies = () => {
   const [error, setError] = useState('');
   const [filter, setFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
-  
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
   const dropdownRef = useRef(null);
   const location = useLocation();
 
@@ -24,43 +24,45 @@ const Movies = () => {
   ];
 
   useEffect(() => {
-    fetchMovies();
-    fetchCommunityMovies();
-    
+    const fetchData = async () => {
+      try {
+        const [moviesResponse, communityResponse] = await Promise.all([
+          moviesAPI.getAll(),
+          moviesAPI.getCommunityMovies()
+        ]);
+
+        setMovies(moviesResponse.data || []);
+        setCommunityMovies(communityResponse.data || []);
+        setError('');
+      } catch (error) {
+        setError('Failed to load movies');
+        console.error('Error fetching movies:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsDropdownOpen(false);
       }
     };
+
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [location.key]);
 
-  const fetchMovies = async () => {
-    try {
-      const response = await moviesAPI.getAll();
-      setMovies(response.data);
-      setError('');
-    } catch (error) {
-      setError('Failed to load movies');
-      console.error('Error fetching movies:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const handleDelete = async (movieId) => {
+    setMovies((prev) => prev.filter((movie) => movie._id !== movieId));
 
-  const fetchCommunityMovies = async () => {
     try {
       const response = await moviesAPI.getCommunityMovies();
-      setCommunityMovies(response.data);
+      setCommunityMovies(response.data || []);
     } catch (error) {
       console.error('Error fetching community movies:', error);
     }
-  };
-
-  const handleDelete = (movieId) => {
-    setMovies(prev => prev.filter(movie => movie._id !== movieId));
-    fetchCommunityMovies();
   };
 
   const handleStatusSelect = (statusValue) => {
@@ -69,14 +71,16 @@ const Movies = () => {
   };
 
   const filteredMovies = movies
-    .filter(movie => filter === 'all' || movie.status === filter)
-    .filter(movie => movie.title.toLowerCase().includes(searchQuery.toLowerCase()));
+    .filter((movie) => filter === 'all' || movie.status === filter)
+    .filter((movie) =>
+      movie.title.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
   const stats = {
     total: movies.length,
-    watched: movies.filter(m => m.status === 'watched').length,
-    watching: movies.filter(m => m.status === 'watching').length,
-    plan: movies.filter(m => m.status === 'plan to watch').length
+    watched: movies.filter((m) => m.status === 'watched').length,
+    watching: movies.filter((m) => m.status === 'watching').length,
+    plan: movies.filter((m) => m.status === 'plan to watch').length
   };
 
   if (loading && movies.length === 0 && communityMovies.length === 0) {
@@ -112,7 +116,6 @@ const Movies = () => {
 
           <div className="search-filter-wrapper">
             <div className="search-filter-container">
-              
               <div className="input-box">
                 <input
                   type="text"
@@ -124,14 +127,14 @@ const Movies = () => {
               </div>
 
               <div className="input-box custom-select-container" ref={dropdownRef}>
-                <div 
-                  className={`custom-select ${filter !== 'all' ? 'selected' : ''}`} 
+                <div
+                  className={`custom-select ${filter !== 'all' ? 'selected' : ''}`}
                   onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                 >
-                  {statuses.find(s => s.value === filter)?.label}
+                  {statuses.find((s) => s.value === filter)?.label}
                 </div>
                 <i className={`bx ${isDropdownOpen ? 'bx-chevron-up' : 'bx-chevron-down'}`}></i>
-                
+
                 {isDropdownOpen && (
                   <ul className="select-dropdown">
                     {statuses.map((s) => (
@@ -142,7 +145,6 @@ const Movies = () => {
                   </ul>
                 )}
               </div>
-
             </div>
           </div>
         </div>
@@ -158,10 +160,10 @@ const Movies = () => {
           </div>
         ) : (
           <div className="movies-grid">
-            {filteredMovies.map(movie => (
-              <MovieCard 
-                key={movie._id} 
-                movie={movie} 
+            {filteredMovies.map((movie) => (
+              <MovieCard
+                key={movie._id}
+                movie={movie}
                 onDelete={handleDelete}
               />
             ))}
@@ -172,7 +174,7 @@ const Movies = () => {
           <h2 className="section-title">
             Community <span className="highlight">Watchlist</span>
           </h2>
-          
+
           {communityMovies.length === 0 ? (
             <div className="no-movies-image">
               <img src="/No movies found.png" alt="No community movies" className="empty-state-image" />
@@ -182,17 +184,16 @@ const Movies = () => {
             </div>
           ) : (
             <div className="movies-grid">
-              {communityMovies.map(movie => (
-                <MovieCard 
-                  key={movie._id} 
-                  movie={movie} 
+              {communityMovies.map((movie) => (
+                <MovieCard
+                  key={movie._id}
+                  movie={movie}
                   isCommunity={true}
                 />
               ))}
             </div>
           )}
         </div>
-
       </div>
 
       <footer className="footer">
