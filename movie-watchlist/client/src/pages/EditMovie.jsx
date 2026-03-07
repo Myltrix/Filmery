@@ -12,20 +12,20 @@ const EditMovie = () => {
   const [error, setError] = useState('');
 
   useEffect(() => {
+    const fetchMovie = async () => {
+      try {
+        const response = await moviesAPI.getById(id);
+        setMovie(response.data);
+      } catch (error) {
+        setError('Failed to load movie');
+        console.error('Error fetching movie:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchMovie();
   }, [id]);
-
-  const fetchMovie = async () => {
-    try {
-      const response = await moviesAPI.getById(id);
-      setMovie(response.data);
-    } catch (error) {
-      setError('Failed to load movie');
-      console.error('Error fetching movie:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleSubmit = async (formData) => {
     try {
@@ -59,11 +59,9 @@ const EditMovie = () => {
   return (
     <div className="form-page">
       <main className="main-content">
-        
         <div className="movie-static-container">
-          
           <div className="form-side">
-            <MovieForm 
+            <MovieForm
               initialData={movie}
               onSubmit={handleSubmit}
               buttonText="Update Movie"
@@ -80,9 +78,7 @@ const EditMovie = () => {
               Back to Watchlist
             </Link>
           </div>
-
         </div>
-
       </main>
 
       <footer className="footer">
