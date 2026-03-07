@@ -24,22 +24,32 @@ const Movies = () => {
   ];
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchMovies = async () => {
       try {
-        const [moviesResponse, communityResponse] = await Promise.all([
-          moviesAPI.getAll(),
-          moviesAPI.getCommunityMovies()
-        ]);
-
+        const moviesResponse = await moviesAPI.getAll();
         setMovies(moviesResponse.data || []);
-        setCommunityMovies(communityResponse.data || []);
         setError('');
       } catch (error) {
-        setError('Failed to load movies');
-        console.error('Error fetching movies:', error);
-      } finally {
-        setLoading(false);
+        console.error('Error fetching movies:', error.response?.data || error.message);
+        setError(error.response?.data?.message || 'Failed to load movies');
       }
+    };
+
+    const fetchCommunityMovies = async () => {
+      try {
+        const communityResponse = await moviesAPI.getCommunityMovies();
+        setCommunityMovies(communityResponse.data || []);
+      } catch (error) {
+        console.error('Error fetching community movies:', error.response?.data || error.message);
+        setCommunityMovies([]);
+      }
+    };
+
+    const fetchData = async () => {
+      setLoading(true);
+      await fetchMovies();
+      await fetchCommunityMovies();
+      setLoading(false);
     };
 
     fetchData();
@@ -61,7 +71,7 @@ const Movies = () => {
       const response = await moviesAPI.getCommunityMovies();
       setCommunityMovies(response.data || []);
     } catch (error) {
-      console.error('Error fetching community movies:', error);
+      console.error('Error refreshing community movies:', error.response?.data || error.message);
     }
   };
 
@@ -71,19 +81,19 @@ const Movies = () => {
   };
 
   const filteredMovies = movies
-    .filter((movie) => filter === 'all' || movie.status === filter)
+    .filter((movie) => filter === 'all' || (movie.status || '').toLowerCase() === filter)
     .filter((movie) =>
-      movie.title.toLowerCase().includes(searchQuery.toLowerCase())
+      (movie.title || '').toLowerCase().includes(searchQuery.toLowerCase())
     );
 
   const stats = {
     total: movies.length,
-    watched: movies.filter((m) => m.status === 'watched').length,
-    watching: movies.filter((m) => m.status === 'watching').length,
-    plan: movies.filter((m) => m.status === 'plan to watch').length
+    watched: movies.filter((m) => (m.status || '').toLowerCase() === 'watched').length,
+    watching: movies.filter((m) => (m.status || '').toLowerCase() === 'watching').length,
+    plan: movies.filter((m) => (m.status || '').toLowerCase() === 'plan to watch').length
   };
 
-  if (loading && movies.length === 0 && communityMovies.length === 0) {
+  if (loading) {
     return <div className="loading">Loading...</div>;
   }
 
