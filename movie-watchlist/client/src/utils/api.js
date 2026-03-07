@@ -1,9 +1,7 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000/api';
-
 const api = axios.create({
-  baseURL: https://movie-watchlist-api.onrender.com/api,
+  baseURL: 'https://movie-watchlist-api.onrender.com/api',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -36,7 +34,8 @@ export const moviesAPI = {
   delete: (id) => api.delete(`/movies/${id}`),
   getCommunityMovies: () => api.get('/movies/community'),
   getComments: (movieId) => api.get(`/movies/${movieId}/comments`),
-  addComment: (movieId, commentData) => api.post(`/movies/${movieId}/comments`, commentData),
+  addComment: (movieId, commentData) =>
+    api.post(`/movies/${movieId}/comments`, commentData),
 };
 
 export default api;
