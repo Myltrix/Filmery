@@ -14,23 +14,23 @@ const MovieCard = ({ movie, onDelete, isCommunity = false }) => {
   const [isSending, setIsSending] = useState(false);
 
   useEffect(() => {
-    if (showCommentsModal) {
-      loadComments();
-    }
-  }, [showCommentsModal]);
+    if (!showCommentsModal) return;
 
-  const loadComments = async () => {
-    setLoadingComments(true);
-    try {
-      const response = await moviesAPI.getComments(movie._id);
-      setComments(response.data);
-    } catch (error) {
-      console.error('Failed to load comments:', error);
-      alert('Не удалось загрузить комментарии');
-    } finally {
-      setLoadingComments(false);
-    }
-  };
+    const loadComments = async () => {
+      setLoadingComments(true);
+      try {
+        const response = await moviesAPI.getComments(movie._id);
+        setComments(response.data || []);
+      } catch (error) {
+        console.error('Failed to load comments:', error);
+        alert('Не удалось загрузить комментарии');
+      } finally {
+        setLoadingComments(false);
+      }
+    };
+
+    loadComments();
+  }, [showCommentsModal, movie._id]);
 
   const handleDelete = async () => {
     setIsDeleting(true);
@@ -55,14 +55,23 @@ const MovieCard = ({ movie, onDelete, isCommunity = false }) => {
     setIsSending(true);
 
     const tempComment = {
-      id: Date.now(),
-      user: 'You',
+      _id: Date.now().toString(),
+      user: { username: 'You' },
       text: commentText,
     };
+
     setComments((prev) => [...prev, tempComment]);
 
     try {
-      await moviesAPI.addComment(movie._id, { text: commentText });
+      const response = await moviesAPI.addComment(movie._id, { text: commentText });
+
+      if (response?.data) {
+        setComments((prev) => {
+          const updated = [...prev];
+          updated[updated.length - 1] = response.data;
+          return updated;
+        });
+      }
     } catch (error) {
       console.error('Error adding comment to server:', error);
     } finally {
@@ -176,13 +185,19 @@ const MovieCard = ({ movie, onDelete, isCommunity = false }) => {
                 &times;
               </button>
             </div>
+
             <div className="comments-list">
               {loadingComments ? (
                 <div className="loading-comments">Loading comments...</div>
               ) : comments.length > 0 ? (
                 comments.map((comment) => (
-                  <div key={comment.id} className="comment-item">
-                    <div className="comment-user">{comment.user}</div>
+                  <div
+                    key={comment._id || comment.id}
+                    className="comment-item"
+                  >
+                    <div className="comment-user">
+                      {comment.user?.username || comment.user || 'User'}
+                    </div>
                     <div className="comment-text">{comment.text}</div>
                   </div>
                 ))
@@ -192,6 +207,7 @@ const MovieCard = ({ movie, onDelete, isCommunity = false }) => {
                 </div>
               )}
             </div>
+
             <form className="comment-input-area" onSubmit={handleAddComment}>
               <input
                 type="text"
