@@ -21,17 +21,17 @@ const Auth = () => {
   });
 
   const handleLoginChange = (e) => {
-    setLoginData({
-      ...loginData,
+    setLoginData((prev) => ({
+      ...prev,
       [e.target.name]: e.target.value
-    });
+    }));
   };
 
   const handleRegisterChange = (e) => {
-    setRegisterData({
-      ...registerData,
+    setRegisterData((prev) => ({
+      ...prev,
       [e.target.name]: e.target.value
-    });
+    }));
   };
 
   const handleLogin = async (e) => {
@@ -41,14 +41,26 @@ const Auth = () => {
 
     try {
       const response = await authAPI.login(loginData);
-      localStorage.setItem('token', response.data.token);
-      localStorage.setItem('user', JSON.stringify({
-        _id: response.data._id,
-        username: response.data.username,
-        email: response.data.email
-      }));
+
+      const token = response.data?.token;
+      const userData = response.data?.user || response.data;
+
+      if (token) {
+        localStorage.setItem('token', token);
+      }
+
+      localStorage.setItem(
+        'user',
+        JSON.stringify({
+          _id: userData?._id || '',
+          username: userData?.username || '',
+          email: userData?.email || ''
+        })
+      );
+
       navigate('/movies');
     } catch (error) {
+      console.error('Login error:', error.response?.data || error.message);
       setError(error.response?.data?.message || 'Login failed');
     } finally {
       setLoading(false);
@@ -62,14 +74,28 @@ const Auth = () => {
 
     try {
       const response = await authAPI.register(registerData);
-      localStorage.setItem('token', response.data.token);
-      localStorage.setItem('user', JSON.stringify({
-        _id: response.data._id,
-        username: response.data.username,
-        email: response.data.email
-      }));
+
+      console.log('Register response:', response.data);
+
+      const token = response.data?.token;
+      const userData = response.data?.user || response.data;
+
+      if (token) {
+        localStorage.setItem('token', token);
+      }
+
+      localStorage.setItem(
+        'user',
+        JSON.stringify({
+          _id: userData?._id || '',
+          username: userData?.username || registerData.username,
+          email: userData?.email || registerData.email
+        })
+      );
+
       navigate('/movies');
     } catch (error) {
+      console.error('Registration error:', error.response?.data || error.message);
       setError(error.response?.data?.message || 'Registration failed');
     } finally {
       setLoading(false);
@@ -84,28 +110,31 @@ const Auth = () => {
             <form onSubmit={handleLogin}>
               <h1>Login</h1>
               {error && <div className="error-message">{error}</div>}
+
               <div className="input-box">
-                <input 
-                  type="text" 
+                <input
+                  type="email"
                   name="email"
-                  placeholder="Username" 
+                  placeholder="Email"
                   value={loginData.email}
                   onChange={handleLoginChange}
-                  required 
+                  required
                 />
                 <i className='bx bxs-user'></i>
               </div>
+
               <div className="input-box">
-                <input 
-                  type="password" 
+                <input
+                  type="password"
                   name="password"
-                  placeholder="Password" 
+                  placeholder="Password"
                   value={loginData.password}
                   onChange={handleLoginChange}
-                  required 
+                  required
                 />
                 <i className='bx bxs-lock-alt'></i>
               </div>
+
               <button type="submit" className="btn" disabled={loading}>
                 {loading ? 'Logging in...' : 'Login'}
               </button>
@@ -116,39 +145,43 @@ const Auth = () => {
             <form onSubmit={handleRegister}>
               <h1>Registration</h1>
               {error && <div className="error-message">{error}</div>}
+
               <div className="input-box">
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   name="username"
-                  placeholder="Username" 
+                  placeholder="Username"
                   value={registerData.username}
                   onChange={handleRegisterChange}
-                  required 
+                  required
                 />
                 <i className='bx bxs-user'></i>
               </div>
+
               <div className="input-box">
-                <input 
-                  type="email" 
+                <input
+                  type="email"
                   name="email"
-                  placeholder="Email" 
+                  placeholder="Email"
                   value={registerData.email}
                   onChange={handleRegisterChange}
-                  required 
+                  required
                 />
                 <i className='bx bxs-envelope'></i>
               </div>
+
               <div className="input-box">
-                <input 
-                  type="password" 
+                <input
+                  type="password"
                   name="password"
-                  placeholder="Password" 
+                  placeholder="Password"
                   value={registerData.password}
                   onChange={handleRegisterChange}
-                  required 
+                  required
                 />
                 <i className='bx bxs-lock-alt'></i>
               </div>
+
               <button type="submit" className="btn" disabled={loading}>
                 {loading ? 'Registering...' : 'Register'}
               </button>
@@ -159,7 +192,14 @@ const Auth = () => {
             <div className="toggle-panel toggle-left">
               <h1>Hello, Welcome!</h1>
               <p>Don't have an account?</p>
-              <button className="btn register-btn" onClick={() => setIsActive(true)}>
+              <button
+                type="button"
+                className="btn register-btn"
+                onClick={() => {
+                  setError('');
+                  setIsActive(true);
+                }}
+              >
                 Register
               </button>
             </div>
@@ -167,7 +207,14 @@ const Auth = () => {
             <div className="toggle-panel toggle-right">
               <h1>Welcome Back!</h1>
               <p>Already have an account?</p>
-              <button className="btn login-btn" onClick={() => setIsActive(false)}>
+              <button
+                type="button"
+                className="btn login-btn"
+                onClick={() => {
+                  setError('');
+                  setIsActive(false);
+                }}
+              >
                 Login
               </button>
             </div>
@@ -184,6 +231,7 @@ const Auth = () => {
             </div>
             <p>Your personal movie tracking companion. Never forget a great film again.</p>
           </div>
+
           <div className="footer-section">
             <h4>Quick Links</h4>
             <ul>
@@ -193,6 +241,7 @@ const Auth = () => {
               <li><Link to="/register">Register</Link></li>
             </ul>
           </div>
+
           <div className="footer-section">
             <h4>Features</h4>
             <ul>
@@ -203,6 +252,7 @@ const Auth = () => {
             </ul>
           </div>
         </div>
+
         <div className="footer-bottom">
           <p>&copy; 2026 Movie Watchlist. All rights reserved.</p>
         </div>
