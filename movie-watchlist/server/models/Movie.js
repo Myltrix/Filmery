@@ -1,62 +1,69 @@
 const mongoose = require('mongoose');
 
-const movieSchema = new mongoose.Schema({
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
+const commentSchema = new mongoose.Schema(
+  {
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true
+    },
+    text: {
+      type: String,
+      required: true,
+      trim: true
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now
+    }
   },
-  title: {
-    type: String,
-    required: [true, 'Movie title is required'],
-    trim: true
-  },
-  director: {
-    type: String,
-    trim: true
-  },
-  year: {
-    type: Number,
-    min: 1888,
-    max: new Date().getFullYear() + 5
-  },
-  genre: {
-    type: String,
-    enum: ['Action', 'Comedy', 'Drama', 'Horror', 'Sci-Fi', 'Romance', 'Thriller', 'Documentary', 'Animation', 'Other'],
-    default: 'Other'
-  },
-  rating: {
-    type: Number,
-    min: 0,
-    max: 10,
-    default: 0
-  },
-  status: {
-    type: String,
-    enum: ['plan to watch', 'watching', 'watched'],
-    default: 'plan to watch'
-  },
-  review: {
-    type: String,
-    maxlength: 500
-  },
-  posterUrl: {
-    type: String,
-    default: ''
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now
-  },
-  updatedAt: {
-    type: Date,
-    default: Date.now
-  }
-});
+  { _id: true }
+);
 
-movieSchema.pre('save', function(next) {
-  this.updatedAt = Date.now();
-  next();
-});
+const movieSchema = new mongoose.Schema(
+  {
+    title: {
+      type: String,
+      required: true,
+      trim: true
+    },
+    director: {
+      type: String,
+      default: ''
+    },
+    year: {
+      type: Number
+    },
+    genre: {
+      type: String,
+      default: ''
+    },
+    status: {
+      type: String,
+      default: 'plan to watch'
+    },
+    rating: {
+      type: Number,
+      default: 0
+    },
+    review: {
+      type: String,
+      default: ''
+    },
+    posterUrl: {
+      type: String,
+      default: ''
+    },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true
+    },
+    comments: [commentSchema]
+  },
+  {
+    timestamps: true
+  }
+);
 
 module.exports = mongoose.model('Movie', movieSchema);
