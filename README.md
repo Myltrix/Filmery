@@ -10,8 +10,8 @@
       </p>
       <p style="font-size: 16px;">
         <strong style="color: #7494ec;">Live :</strong><br>
-        <a href="https://myltrix.github.io/Filmery/" target="_blank" style="color: #5a78d6; font-weight: bold; text-decoration: none; font-size: 18px;">
-          https://myltrix.github.io/Filmery/
+        <a href="https://filmery.vercel.app/" target="_blank" style="color: #5a78d6; font-weight: bold; text-decoration: none; font-size: 18px;">
+          https://filmery.vercel.app/
         </a>
       </p>
       <p style="font-size: 16px;">
