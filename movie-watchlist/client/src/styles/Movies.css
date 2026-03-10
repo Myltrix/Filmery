@@ -124,7 +124,8 @@
 .search-filter-container .input-box input,
 .custom-select {
   width: 100%;
-  padding: 13px 40px 13px 20px;
+  height: 50px;
+  padding: 0 40px 0 20px;
   background: #eee;
   border-radius: 8px;
   border: none;
@@ -134,7 +135,9 @@
   font-weight: 500;
   font-family: "Poppins", sans-serif;
   text-align: left;
-  cursor: text;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
 }
 
 .search-filter-container .input-box input::placeholder {
@@ -384,6 +387,9 @@
     flex-direction: column;
     gap: 10px;
   }
+  .search-filter-container .input-box {
+    width: 100%;
+  }
   .stats-container {
     gap: 10px;
   }
@@ -478,7 +484,8 @@
   }
   .search-filter-container .input-box input,
   .custom-select {
-    padding: 12px 35px 12px 15px;
+    height: 46px;
+    padding: 0 35px 0 15px;
     font-size: 14px;
   }
   .select-dropdown li {
