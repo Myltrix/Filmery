@@ -33,10 +33,9 @@ The project was created as a learning project to practice modern web development
 
 # 🧩 Pages
 - **Home** – Landing page with introduction and main features  
-- **Watchlist** – Personal list of movies the user plans to watch  
-- **Movies** – Browse and search movies  
-- **Movie Details** – Detailed information about a selected movie  
-- **Profile** – User profile with saved movies and ratings  
+- **My Movies** – Personal list of movies the user plans to watch  
+- **Movie Details** – Detailed information about the selected film and comments
+- **Add Movie** –The page where the user can add their movie  
 - **Login / Register** – Authentication pages for user accounts  
 
 # ⭐ Features
