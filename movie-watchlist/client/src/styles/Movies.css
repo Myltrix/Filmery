@@ -131,6 +131,7 @@
   border: none;
   outline: none;
   font-size: 15px;
+  line-height: 50px;
   color: #333;
   font-weight: 500;
   font-family: "Poppins", sans-serif;
@@ -142,7 +143,8 @@
 
 .search-filter-container .input-box input::placeholder {
   color: #888;
-  font-weight: 400;
+  font-size: 15px;
+  font-weight: 500;
 }
 
 .search-filter-container .input-box i {
@@ -161,14 +163,12 @@
 
 .custom-select {
   cursor: pointer;
-  color: #888;
-  font-weight: 400;
+  color: #333;
   user-select: none;
 }
 
-.custom-select.selected {
+.custom-select:not(.selected) {
   color: #333;
-  font-weight: 500;
 }
 
 .select-dropdown {
@@ -187,7 +187,7 @@
 
 .select-dropdown li {
   padding: 10px 20px;
-  font-size: 14px;
+  font-size: 15px;
   color: #333;
   transition: all 0.2s ease;
 }
@@ -343,45 +343,20 @@
   .movies-grid {
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   }
-  .footer-content {
-    gap: 1.5rem;
-  }
 }
 
 @media screen and (max-width: 992px) {
   .section-title {
     font-size: 2.8rem;
-    margin-bottom: 3rem;
-  }
-  .stats-container {
-    gap: 1rem;
-  }
-  .stat-card {
-    min-width: 120px;
-    padding: 1rem 1.2rem;
-  }
-  .search-filter-wrapper {
-    padding: 20px 25px;
-  }
-  .movies-grid {
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 1.2rem;
   }
   .footer-content {
     grid-template-columns: repeat(2, 1fr);
-  }
-  .community-watchlist-section {
-    margin-top: 4rem;
   }
 }
 
 @media screen and (max-width: 768px) {
   .section-title {
     font-size: 2.5rem;
-    margin-bottom: 2.5rem;
-  }
-  .search-filter-wrapper {
-    padding: 20px;
   }
   .search-filter-container {
     flex-direction: column;
@@ -390,63 +365,20 @@
   .search-filter-container .input-box {
     width: 100%;
   }
-  .stats-container {
-    gap: 10px;
-  }
-  .stat-card {
-    min-width: 110px;
-    padding: 0.8rem 1rem;
-  }
-  .stat-value {
-    width: 45px;
-    height: 45px;
-    font-size: 1.3rem;
-  }
   .movies-grid {
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 1rem;
-  }
-  .no-movies-image {
-    margin: 20px 15px;
-    padding: 30px 15px;
-  }
-  .empty-state-image {
-    max-width: 180px;
-  }
-  .footer-content {
-    gap: 1.5rem;
-  }
-  .footer-logo h3 {
-    font-size: 1.3rem;
   }
 }
 
 @media screen and (max-width: 576px) {
-  .movies-container {
-    padding: 20px 15px;
-  }
   .section-title {
     font-size: 2rem;
-    margin-bottom: 2rem;
-  }
-  .stats-container {
-    flex-wrap: wrap;
-    gap: 8px;
   }
   .stat-card {
     min-width: calc(50% - 8px);
-    flex: 1 1 auto;
-  }
-  .search-filter-wrapper {
-    padding: 15px;
   }
   .movies-grid {
     grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-  .add-movie-btn {
-    width: 100%;
-    text-align: center;
   }
   .footer-content {
     grid-template-columns: 1fr;
@@ -455,88 +387,24 @@
   .footer-logo {
     justify-content: center;
   }
-  .footer-section h4 {
-    margin-top: 1rem;
-  }
-  .community-watchlist-section {
-    margin-top: 3rem;
-  }
 }
 
 @media screen and (max-width: 480px) {
   .section-title {
     font-size: 1.8rem;
   }
+  .search-filter-container .input-box input,
+  .custom-select {
+    height: 48px;
+    font-size: 15px;
+    padding: 0 35px 0 15px;
+  }
+  .search-filter-container .input-box input::placeholder {
+    font-size: 15px;
+  }
   .stat-card {
     min-width: 100%;
     flex-direction: row;
     justify-content: flex-start;
-    gap: 1rem;
-    padding: 1rem;
-  }
-  .stat-value {
-    width: 40px;
-    height: 40px;
-    font-size: 1.2rem;
-  }
-  .stat-label h3 {
-    font-size: 1rem;
-  }
-  .search-filter-container .input-box input,
-  .custom-select {
-    height: 46px;
-    padding: 0 35px 0 15px;
-    font-size: 14px;
-  }
-  .select-dropdown li {
-    padding: 8px 15px;
-    font-size: 13px;
-  }
-  .add-movie-btn {
-    padding: 0.7rem 1rem;
-    font-size: 0.9rem;
-  }
-  .footer-bottom {
-    font-size: 0.8rem;
-  }
-}
-
-@media screen and (max-width: 400px) {
-  .section-title {
-    font-size: 1.5rem;
-  }
-  .movies-container {
-    padding: 15px 10px;
-  }
-  .stat-card {
-    padding: 0.8rem;
-  }
-  .stat-value {
-    width: 35px;
-    height: 35px;
-    font-size: 1rem;
-  }
-  .stat-label h3 {
-    font-size: 0.9rem;
-  }
-  .search-filter-wrapper {
-    padding: 12px;
-  }
-  .movies-grid {
-    gap: 0.8rem;
-  }
-  .no-movies-image {
-    padding: 20px 10px;
-  }
-  .empty-state-image {
-    max-width: 150px;
-  }
-  .add-movie-btn {
-    padding: 0.6rem 0.8rem;
-    font-size: 0.85rem;
-  }
-  .footer-section p,
-  .footer-section ul li a {
-    font-size: 0.85rem;
   }
 }
